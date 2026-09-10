@@ -1,4 +1,4 @@
-import { UserRole } from "../constants/user-role";
+import { UserRole } from "../types/user-role";
 
 interface User {
   id: number;

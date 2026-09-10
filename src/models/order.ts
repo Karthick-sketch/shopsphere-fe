@@ -1,8 +1,10 @@
+import type { OrderStatusType } from "../types/order-status";
+
 interface Order {
   id: number;
   userId: number;
   totalAmount: number;
-  status: string;
+  status: OrderStatusType;
   orderDate: string;
 }
 

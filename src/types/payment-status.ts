@@ -1,4 +1,4 @@
-const PaymentStatus = {
+export const PaymentStatus = {
   PENDING: "PENDING",
   PAID: "PAID",
   FAILED: "FAILED",
