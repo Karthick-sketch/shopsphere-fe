@@ -10,7 +10,7 @@ export function Navbar() {
       <div className="page navbar__inner">
         <NavLink to="/" className="navbar__brand">
           <span className="navbar__mark" aria-hidden="true" />
-          Brewline
+          ShopSphere
         </NavLink>
 
         <nav className="navbar__links">

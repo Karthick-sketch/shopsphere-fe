@@ -11,8 +11,8 @@ import type { Product } from "../models/product";
 interface CartContextValue {
   lines: CartItem[];
   addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  setQuantity: (productId: string, quantity: number) => void;
+  removeItem: (productId: number) => void;
+  setQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
   totalCount: number;
 }
@@ -24,10 +24,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   function addItem(product: Product, quantity = 1) {
     setLines((prev) => {
-      const existing = prev.find((l) => l.productId === product.id);
+      const existing = prev.find((l) => l.product.id === product.id);
       if (existing) {
         return prev.map((l) =>
-          l.productId === product.id
+          l.product.id === product.id
             ? { ...l, quantity: Math.min(l.quantity + quantity, product.stock) }
             : l,
         );
@@ -35,26 +35,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [
         ...prev,
         {
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          stock: product.stock,
+          id: 0,
+          cartId: 0,
           quantity: Math.min(quantity, product.stock),
+          product,
         },
       ];
     });
   }
 
-  function removeItem(productId: string) {
-    setLines((prev) => prev.filter((l) => l.productId !== productId));
+  function removeItem(productId: number) {
+    setLines((prev) => prev.filter((l) => l.product.id !== productId));
   }
 
-  function setQuantity(productId: string, quantity: number) {
+  function setQuantity(productId: number, quantity: number) {
     setLines((prev) =>
       quantity <= 0
-        ? prev.filter((l) => l.productId !== productId)
-        : prev.map((l) => (l.productId === productId ? { ...l, quantity } : l)),
+        ? prev.filter((l) => l.product.id !== productId)
+        : prev.map((l) =>
+            l.product.id === productId ? { ...l, quantity } : l,
+          ),
     );
   }
 

@@ -1,4 +1,5 @@
 export const OrderStatus = {
+  CONFIRMED: "CONFIRMED",
   PENDING: "PENDING",
   SHIPPED: "SHIPPED",
   DELIVERED: "DELIVERED",

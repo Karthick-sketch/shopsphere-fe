@@ -2,8 +2,9 @@ import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../api/orders";
-import type { Order, OrderItem } from "../enums";
+import type { Order, OrderItem } from "../models/order";
 import "./PaymentPage.css";
+import { OrderStatus } from "../enums/order-status";
 
 const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -31,7 +32,10 @@ export function PaymentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const subtotal = lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
+  const subtotal = lines.reduce(
+    (sum, l) => sum + l.product.price * l.quantity,
+    0,
+  );
   const shipping =
     lines.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
       ? 0
@@ -65,11 +69,8 @@ export function PaymentPage() {
     setError(null);
 
     const items: OrderItem[] = lines.map((l) => ({
-      productId: l.productId,
-      name: l.name,
-      price: l.price,
       quantity: l.quantity,
-      image: l.image,
+      product: l.product,
     }));
 
     const order: Order = {
@@ -78,7 +79,7 @@ export function PaymentPage() {
       shipping,
       total,
       placedAt: new Date().toISOString(),
-      status: "Confirmed",
+      status: OrderStatus.CONFIRMED,
       shippingName: name.trim(),
       shippingAddress: address.trim(),
       cardLast4: digitsOnly.slice(-4),
@@ -193,16 +194,16 @@ export function PaymentPage() {
           <h2 className="payment-summary__title">Order summary</h2>
           <ul className="payment-summary__list">
             {lines.map((line) => (
-              <li key={line.productId} className="payment-summary__line">
-                <img src={line.image} alt="" />
+              <li key={line.product.id} className="payment-summary__line">
+                <img src={line.product.image} alt="" />
                 <div>
-                  <p className="payment-summary__name">{line.name}</p>
+                  <p className="payment-summary__name">{line.product.name}</p>
                   <p className="payment-summary__meta">
-                    {line.quantity} × ${line.price.toFixed(2)}
+                    {line.quantity} × ${line.product.price.toFixed(2)}
                   </p>
                 </div>
                 <span className="payment-summary__line-total">
-                  ${(line.price * line.quantity).toFixed(2)}
+                  ${(line.product.price * line.quantity).toFixed(2)}
                 </span>
               </li>
             ))}

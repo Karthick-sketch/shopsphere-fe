@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchProduct } from "../api/products";
 import type { Product } from "../models/product";
-import { RoastBar } from "../components/RoastBar";
 import { CartPreview } from "../components/CartPreview";
 import { useCart } from "../context/CartContext";
 import "./ProductDetails.css";
@@ -82,8 +81,6 @@ export function ProductDetails() {
             <div className="product-details__info">
               <p className="product-details__category">{product.category}</p>
               <h1 className="product-details__name">{product.name}</h1>
-              {product.roast && <RoastBar roast={product.roast} />}
-              <p className="product-details__origin">{product.origin}</p>
               <p className="product-details__price">
                 ${product.price.toFixed(2)}
               </p>
