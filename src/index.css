@@ -1,0 +1,138 @@
+:root {
+  --ink: #211a16;
+  --ink-soft: #4a3f37;
+  --bone: #f5f1e8;
+  --bone-dim: #e9e2d2;
+  --copper: #c1712f;
+  --copper-deep: #9a5722;
+  --moss: #6e7454;
+  --slate: #52666d;
+  --line: rgba(245, 241, 232, 0.14);
+  --line-on-bone: rgba(33, 26, 22, 0.12);
+  --danger: #a8402f;
+
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --content-width: 1180px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.page {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 32px;
+  width: 100%;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  padding: 13px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 3px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.btn-primary {
+  background: var(--copper);
+  color: var(--bone);
+}
+.btn-primary:hover {
+  background: var(--copper-deep);
+}
+.btn-primary:disabled {
+  background: var(--bone-dim);
+  color: var(--ink-soft);
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-on-bone);
+}
+.btn-ghost:hover {
+  border-color: var(--ink);
+}
+
+.btn-dark {
+  background: var(--ink);
+  color: var(--bone);
+}
+.btn-dark:hover {
+  background: var(--ink-soft);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0 18px;
+  }
+}

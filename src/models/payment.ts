@@ -1,5 +1,5 @@
-import type { PaymentMethodType } from "../types/payment-method";
-import type { PaymentStatusType } from "../types/payment-status";
+import type { PaymentMethodType } from "../enums/payment-method";
+import type { PaymentStatusType } from "../enums/payment-status";
 
 interface Payment {
   id: number;

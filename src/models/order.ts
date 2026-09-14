@@ -1,4 +1,4 @@
-import type { OrderStatusType } from "../types/order-status";
+import type { OrderStatusType } from "../enums/order-status";
 
 interface Order {
   id: number;

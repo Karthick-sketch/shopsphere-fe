@@ -1,0 +1,26 @@
+.roast-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.roast-bar__segments {
+  display: flex;
+  gap: 3px;
+}
+
+.roast-bar__seg {
+  width: 14px;
+  height: 5px;
+  background: var(--bone-dim);
+  border-radius: 1px;
+}
+
+.roast-bar__seg.is-filled {
+  background: var(--copper);
+}
+
+.roast-bar__label {
+  font-size: 12px;
+  color: var(--ink-soft);
+}

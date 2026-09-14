@@ -1,0 +1,134 @@
+.orders-page {
+  padding: 40px 32px 80px;
+  max-width: 760px;
+}
+
+.orders-page__title {
+  font-size: 30px;
+  margin-bottom: 24px;
+}
+
+.orders-banner {
+  background: var(--moss);
+  color: var(--bone);
+  padding: 14px 18px;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.orders-state {
+  color: var(--ink-soft);
+  padding: 30px 0;
+}
+
+.orders-state--error {
+  color: var(--danger);
+}
+
+.orders-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 30px 0;
+  color: var(--ink-soft);
+}
+
+.orders-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  border: 1px solid var(--line-on-bone);
+  border-top: 3px solid var(--copper);
+  border-radius: 2px;
+  padding: 20px 22px;
+}
+
+.order-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.order-card__id {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.order-card__date {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.order-card__status {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--moss);
+  background: rgba(110, 116, 84, 0.12);
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.order-card__items {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-card__item {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.order-card__item img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.order-card__item-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.order-card__item-meta {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+.order-card__foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line-on-bone);
+  padding-top: 14px;
+}
+
+.order-card__total {
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+@media (max-width: 640px) {
+  .orders-page {
+    padding: 28px 18px 60px;
+  }
+}

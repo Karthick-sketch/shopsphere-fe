@@ -1,0 +1,98 @@
+.navbar {
+  background: var(--ink);
+  color: var(--bone);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  height: 72px;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--bone);
+  white-space: nowrap;
+}
+
+.navbar__mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--copper);
+  display: inline-block;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 28px;
+  flex: 1;
+}
+
+.navbar__link {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(245, 241, 232, 0.68);
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar__link:hover {
+  color: var(--bone);
+}
+
+.navbar__link.active {
+  color: var(--bone);
+  border-bottom-color: var(--copper);
+}
+
+.navbar__cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bone);
+  border: 1px solid var(--line);
+  padding: 8px 14px;
+  border-radius: 3px;
+  transition: border-color 150ms ease;
+}
+
+.navbar__cart:hover {
+  border-color: var(--copper);
+}
+
+.navbar__cart-count {
+  background: var(--copper);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+}
+
+@media (max-width: 640px) {
+  .navbar__inner {
+    gap: 18px;
+    height: 64px;
+  }
+  .navbar__links {
+    gap: 16px;
+  }
+}
