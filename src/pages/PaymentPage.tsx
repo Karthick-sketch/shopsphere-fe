@@ -70,6 +70,7 @@ export function PaymentPage() {
 
     const items: OrderItem[] = lines.map((l) => ({
       quantity: l.quantity,
+      price: l.product.price,
       product: l.product,
     }));
 

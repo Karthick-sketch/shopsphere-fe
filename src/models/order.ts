@@ -5,6 +5,7 @@ interface OrderItem {
   id?: number;
   orderId?: number;
   quantity: number;
+  price: number;
   product: Product;
 }
 
