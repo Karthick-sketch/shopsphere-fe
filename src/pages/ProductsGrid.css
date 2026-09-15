@@ -24,6 +24,7 @@
 
 .products-section {
   padding: 40px 32px 80px;
+  max-width: 1440px;
 }
 
 .products-toolbar {
@@ -58,8 +59,8 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .products-layout {
@@ -76,6 +77,9 @@
 @media (max-width: 900px) {
   .products-layout {
     grid-template-columns: 1fr;
+  }
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -98,5 +102,8 @@
   }
   .products-section {
     padding: 28px 18px 60px;
+  }
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

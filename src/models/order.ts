@@ -1,4 +1,4 @@
-import type { Product } from "./product";
+import type { ProductSummary } from "./product";
 import type { OrderStatusType } from "../enums/order-status";
 
 interface OrderItem {
@@ -6,7 +6,7 @@ interface OrderItem {
   orderId?: number;
   quantity: number;
   price: number;
-  product: Product;
+  productSummary: ProductSummary;
 }
 
 interface Order {

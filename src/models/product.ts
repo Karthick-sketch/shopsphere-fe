@@ -10,4 +10,10 @@ interface Product {
   userId: number;
 }
 
-export type { Product };
+interface ProductSummary {
+  id: number;
+  name: string;
+  image?: string;
+}
+
+export type { Product, ProductSummary };
