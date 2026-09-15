@@ -87,10 +87,12 @@ export function OrdersPage() {
 
               <ul className="order-card__items">
                 {order.items.map((item) => (
-                  <li key={item.productId} className="order-card__item">
-                    <img src={item.image} alt="" />
+                  <li key={item.product.id} className="order-card__item">
+                    <img src={item.product.image} alt="" />
                     <div>
-                      <p className="order-card__item-name">{item.name}</p>
+                      <p className="order-card__item-name">
+                        {item.product.name}
+                      </p>
                       <p className="order-card__item-meta">
                         {item.quantity} × ${item.price.toFixed(2)}
                       </p>

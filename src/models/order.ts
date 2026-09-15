@@ -11,7 +11,6 @@ interface OrderItem {
 
 interface Order {
   id?: number;
-  userId?: number;
   status: OrderStatusType;
   placedAt: string;
   subtotal: number;
@@ -21,6 +20,26 @@ interface Order {
   shippingAddress: string;
   cardLast4: string;
   items: OrderItem[];
+  userId?: number;
 }
 
-export type { Order, OrderItem };
+interface OrderItemRequest {
+  quantity: number;
+  price: number;
+  productId: number;
+}
+
+interface OrderRequest {
+  status: OrderStatusType;
+  placedAt: string;
+  subtotal: number;
+  shipping: number;
+  total: number;
+  shippingName: string;
+  shippingAddress: string;
+  cardLast4: string;
+  items: OrderItemRequest[];
+  userId?: number;
+}
+
+export type { Order, OrderItem, OrderItemRequest, OrderRequest };

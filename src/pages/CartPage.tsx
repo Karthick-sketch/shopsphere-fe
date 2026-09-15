@@ -9,8 +9,14 @@ export function CartPage() {
   const { lines, setQuantity, removeItem } = useCart();
   const navigate = useNavigate();
 
-  const subtotal = lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
-  const shipping = lines.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE;
+  const subtotal = lines.reduce(
+    (sum, l) => sum + l.product.price * l.quantity,
+    0,
+  );
+  const shipping =
+    lines.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
+      ? 0
+      : SHIPPING_FLAT_RATE;
   const total = subtotal + shipping;
 
   if (lines.length === 0) {
@@ -32,22 +38,36 @@ export function CartPage() {
       <div className="cart-page__layout">
         <ul className="cart-list">
           {lines.map((line) => (
-            <li key={line.productId} className="cart-line">
-              <Link to={`/products/${line.productId}`} className="cart-line__thumb-link">
-                <img src={line.image} alt="" className="cart-line__thumb" />
+            <li key={line.product.id} className="cart-line">
+              <Link
+                to={`/products/${line.product.id}`}
+                className="cart-line__thumb-link"
+              >
+                <img
+                  src={line.product.image}
+                  alt=""
+                  className="cart-line__thumb"
+                />
               </Link>
 
               <div className="cart-line__info">
-                <Link to={`/products/${line.productId}`} className="cart-line__name">
-                  {line.name}
+                <Link
+                  to={`/products/${line.product.id}`}
+                  className="cart-line__name"
+                >
+                  {line.product.name}
                 </Link>
-                <p className="cart-line__price">${line.price.toFixed(2)} each</p>
+                <p className="cart-line__price">
+                  ${line.product.price.toFixed(2)} each
+                </p>
               </div>
 
               <div className="quantity-stepper cart-line__stepper">
                 <button
                   type="button"
-                  onClick={() => setQuantity(line.productId, line.quantity - 1)}
+                  onClick={() =>
+                    setQuantity(line.product.id, line.quantity - 1)
+                  }
                   aria-label="Decrease quantity"
                 >
                   −
@@ -56,7 +76,10 @@ export function CartPage() {
                 <button
                   type="button"
                   onClick={() =>
-                    setQuantity(line.productId, Math.min(line.stock, line.quantity + 1))
+                    setQuantity(
+                      line.product.id,
+                      Math.min(line.product.stock, line.quantity + 1),
+                    )
                   }
                   aria-label="Increase quantity"
                 >
@@ -64,12 +87,14 @@ export function CartPage() {
                 </button>
               </div>
 
-              <p className="cart-line__total">${(line.price * line.quantity).toFixed(2)}</p>
+              <p className="cart-line__total">
+                ${(line.product.price * line.quantity).toFixed(2)}
+              </p>
 
               <button
                 type="button"
                 className="cart-line__remove"
-                onClick={() => removeItem(line.productId)}
+                onClick={() => removeItem(line.product.id)}
               >
                 Remove
               </button>
@@ -89,7 +114,8 @@ export function CartPage() {
           </div>
           {shipping > 0 && (
             <p className="cart-summary__hint">
-              Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for free shipping.
+              Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for
+              free shipping.
             </p>
           )}
           <div className="cart-summary__row cart-summary__row--total">
@@ -97,7 +123,10 @@ export function CartPage() {
             <span>${total.toFixed(2)}</span>
           </div>
 
-          <button className="btn btn-primary cart-summary__checkout" onClick={() => navigate("/payment")}>
+          <button
+            className="btn btn-primary cart-summary__checkout"
+            onClick={() => navigate("/payment")}
+          >
             Place order
           </button>
           <Link to="/" className="cart-summary__continue">

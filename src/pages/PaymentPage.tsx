@@ -2,7 +2,7 @@ import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../api/orders";
-import type { Order, OrderItem } from "../models/order";
+import type { OrderItemRequest, OrderRequest } from "../models/order";
 import "./PaymentPage.css";
 import { OrderStatus } from "../enums/order-status";
 
@@ -68,13 +68,13 @@ export function PaymentPage() {
     setSubmitting(true);
     setError(null);
 
-    const items: OrderItem[] = lines.map((l) => ({
+    const items: OrderItemRequest[] = lines.map((l) => ({
       quantity: l.quantity,
       price: l.product.price,
-      product: l.product,
+      productId: l.product.id!,
     }));
 
-    const order: Order = {
+    const order: OrderRequest = {
       items,
       subtotal,
       shipping,

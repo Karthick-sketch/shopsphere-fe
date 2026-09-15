@@ -5,7 +5,10 @@ import "./CartPreview.css";
 export function CartPreview() {
   const { lines, totalCount } = useCart();
 
-  const subtotal = lines.reduce((sum, l) => sum + l.price * l.quantity, 0);
+  const subtotal = lines.reduce(
+    (sum, l) => sum + l.product.price * l.quantity,
+    0,
+  );
 
   return (
     <aside className="cart-preview">
@@ -15,17 +18,23 @@ export function CartPreview() {
       </div>
 
       {lines.length === 0 ? (
-        <p className="cart-preview__empty">Nothing added yet. Items you add will show up here.</p>
+        <p className="cart-preview__empty">
+          Nothing added yet. Items you add will show up here.
+        </p>
       ) : (
         <>
           <ul className="cart-preview__list">
             {lines.map((line) => (
-              <li key={line.productId} className="cart-preview__line">
-                <img src={line.image} alt="" className="cart-preview__thumb" />
+              <li key={line.product.id} className="cart-preview__line">
+                <img
+                  src={line.product.image}
+                  alt=""
+                  className="cart-preview__thumb"
+                />
                 <div className="cart-preview__line-info">
-                  <p className="cart-preview__line-name">{line.name}</p>
+                  <p className="cart-preview__line-name">{line.product.name}</p>
                   <p className="cart-preview__line-meta">
-                    {line.quantity} × ${line.price.toFixed(2)}
+                    {line.quantity} × ${line.product.price.toFixed(2)}
                   </p>
                 </div>
               </li>

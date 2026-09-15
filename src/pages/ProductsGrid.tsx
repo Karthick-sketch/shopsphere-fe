@@ -47,20 +47,6 @@ export function ProductsGrid() {
 
   return (
     <div>
-      <section className="hero">
-        <div className="page hero__inner">
-          <h1 className="hero__title">
-            Beans, gear, and everything
-            <br />
-            in between.
-          </h1>
-          <p className="hero__subtitle">
-            A small catalog of brewers, grinders, and small-batch roasts, chosen
-            for people who care about the cup more than the counter it sits on.
-          </p>
-        </div>
-      </section>
-
       <section className="page products-section">
         <div className="products-layout">
           <div className="products-main">
