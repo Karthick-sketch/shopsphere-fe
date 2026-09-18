@@ -16,4 +16,12 @@ interface ProductSummary {
   image?: string;
 }
 
-export type { Product, ProductSummary };
+interface ProductInfo {
+  id: number;
+  name: string;
+  price: number;
+  stock: number;
+  image?: string;
+}
+
+export type { Product, ProductSummary, ProductInfo };

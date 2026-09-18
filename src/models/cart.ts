@@ -1,16 +1,16 @@
-import type { Product } from "./product";
+import type { ProductInfo } from "./product";
 
 interface Cart {
   id: number;
   userId: number;
-  cartItems: CartItem[];
-}
-
-interface CartItem {
-  id: number;
-  cartId: number;
   quantity: number;
-  product: Product;
+  productInfo: ProductInfo;
 }
 
-export type { Cart, CartItem };
+interface CartRequest {
+  userId: number;
+  productId: number;
+  quantity: number;
+}
+
+export type { Cart, CartRequest };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { fetchOrders } from "../api/orders";
+import { fetchOrders } from "../api/order-service";
 import type { Order } from "../models/order";
 import "./OrdersPage.css";
 

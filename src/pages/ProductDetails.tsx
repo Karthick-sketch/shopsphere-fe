@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchProduct } from "../api/products";
+import { fetchProduct } from "../api/product-service";
 import type { Product } from "../models/product";
 import { CartPreview } from "../components/CartPreview";
 import { useCart } from "../context/CartContext";

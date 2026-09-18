@@ -6,20 +6,20 @@ const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
 
 export function CartPage() {
-  const { lines, setQuantity, removeItem } = useCart();
+  const { items, setQuantity, removeItem } = useCart();
   const navigate = useNavigate();
 
-  const subtotal = lines.reduce(
-    (sum, l) => sum + l.product.price * l.quantity,
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.productInfo.price * item.quantity,
     0,
   );
   const shipping =
-    lines.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
+    items.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
       ? 0
       : SHIPPING_FLAT_RATE;
   const total = subtotal + shipping;
 
-  if (lines.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="page cart-empty">
         <h1>Your cart is empty</h1>
@@ -37,14 +37,14 @@ export function CartPage() {
 
       <div className="cart-page__layout">
         <ul className="cart-list">
-          {lines.map((line) => (
-            <li key={line.product.id} className="cart-line">
+          {items.map((item) => (
+            <li key={item.productInfo.id} className="cart-line">
               <Link
-                to={`/products/${line.product.id}`}
+                to={`/products/${item.productInfo.id}`}
                 className="cart-line__thumb-link"
               >
                 <img
-                  src={line.product.image}
+                  src={item.productInfo.image}
                   alt=""
                   className="cart-line__thumb"
                 />
@@ -52,13 +52,13 @@ export function CartPage() {
 
               <div className="cart-line__info">
                 <Link
-                  to={`/products/${line.product.id}`}
+                  to={`/products/${item.productInfo.id}`}
                   className="cart-line__name"
                 >
-                  {line.product.name}
+                  {item.productInfo.name}
                 </Link>
                 <p className="cart-line__price">
-                  ${line.product.price.toFixed(2)} each
+                  ${item.productInfo.price.toFixed(2)} each
                 </p>
               </div>
 
@@ -66,19 +66,19 @@ export function CartPage() {
                 <button
                   type="button"
                   onClick={() =>
-                    setQuantity(line.product.id, line.quantity - 1)
+                    setQuantity(item.productInfo.id, item.quantity - 1)
                   }
                   aria-label="Decrease quantity"
                 >
                   −
                 </button>
-                <span>{line.quantity}</span>
+                <span>{item.quantity}</span>
                 <button
                   type="button"
                   onClick={() =>
                     setQuantity(
-                      line.product.id,
-                      Math.min(line.product.stock, line.quantity + 1),
+                      item.productInfo.id,
+                      Math.min(item.productInfo.stock, item.quantity + 1),
                     )
                   }
                   aria-label="Increase quantity"
@@ -88,13 +88,13 @@ export function CartPage() {
               </div>
 
               <p className="cart-line__total">
-                ${(line.product.price * line.quantity).toFixed(2)}
+                ${(item.productInfo.price * item.quantity).toFixed(2)}
               </p>
 
               <button
                 type="button"
                 className="cart-line__remove"
-                onClick={() => removeItem(line.product.id)}
+                onClick={() => removeItem(item.productInfo.id)}
               >
                 Remove
               </button>
@@ -102,34 +102,34 @@ export function CartPage() {
           ))}
         </ul>
 
-        <aside className="cart-summary">
-          <h2 className="cart-summary__title">Order summary</h2>
-          <div className="cart-summary__row">
+        <aside className="cart-Info">
+          <h2 className="cart-Info__title">Order Info</h2>
+          <div className="cart-Info__row">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          <div className="cart-summary__row">
+          <div className="cart-Info__row">
             <span>Shipping</span>
             <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
           </div>
           {shipping > 0 && (
-            <p className="cart-summary__hint">
+            <p className="cart-Info__hint">
               Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for
               free shipping.
             </p>
           )}
-          <div className="cart-summary__row cart-summary__row--total">
+          <div className="cart-Info__row cart-Info__row--total">
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
 
           <button
-            className="btn btn-primary cart-summary__checkout"
+            className="btn btn-primary cart-Info__checkout"
             onClick={() => navigate("/payment")}
           >
             Place order
           </button>
-          <Link to="/" className="cart-summary__continue">
+          <Link to="/" className="cart-Info__continue">
             Continue shopping
           </Link>
         </aside>

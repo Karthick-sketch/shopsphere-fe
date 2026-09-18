@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchProducts } from "../api/products";
+import { fetchProducts } from "../api/product-service";
 import type { Product } from "../models/product";
 import { ProductCard } from "../components/ProductCard";
 import { CartPreview } from "../components/CartPreview";

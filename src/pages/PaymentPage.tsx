@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { createOrder } from "../api/orders";
+import { createOrder } from "../api/order-service";
 import type { OrderItemRequest, OrderRequest } from "../models/order";
 import "./PaymentPage.css";
 import { OrderStatus } from "../enums/order-status";

@@ -4,8 +4,8 @@ import { useCart } from "../context/CartContext";
 import "./ProductCard.css";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { lines, addItem, setQuantity } = useCart();
-  const cartLine = lines.find((l) => l.product.id === product.id);
+  const { items, addItem, setQuantity } = useCart();
+  const cartLine = items.find((i) => i.productInfo.id === product.id);
   const qty = cartLine?.quantity ?? 0;
   const outOfStock = product.stock === 0;
 
@@ -40,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
             <button
               className="product-card__qty-btn"
               aria-label="Decrease quantity"
-              onClick={() => setQuantity(product.id, qty - 1)}
+              onClick={() => setQuantity(cartLine.id, qty - 1)}
             >
               −
             </button>
@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
               className="product-card__qty-btn"
               aria-label="Increase quantity"
               disabled={qty >= product.stock}
-              onClick={() => setQuantity(product.id, qty + 1)}
+              onClick={() => setQuantity(cartLine.id, qty + 1)}
             >
               +
             </button>

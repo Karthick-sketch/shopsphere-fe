@@ -5,7 +5,6 @@ const serviceRoute = "/shopsphere-order-service/api/orders";
 const userId = 6;
 
 export async function fetchOrders(): Promise<Order[]> {
-  // const res = await apiClient.get<Order[]>("/orders?_sort=placedAt&_order=desc");
   const res = await apiClient.get<Order[]>(serviceRoute);
   return res.data;
 }
