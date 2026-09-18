@@ -5,9 +5,15 @@ import { createOrder } from "../api/order-service";
 import type { OrderItemRequest, OrderRequest } from "../models/order";
 import "./PaymentPage.css";
 import { OrderStatus } from "../enums/order-status";
+import type { PaymentRequest } from "../models/payment";
+import { PaymentMethod, type PaymentMethodType } from "../enums/payment-method";
+import { PaymentStatus } from "../enums/payment-status";
+import { PaymentService } from "../api/payment-service";
 
 const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
+
+const paymentService = new PaymentService();
 
 function formatCardNumber(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -26,6 +32,9 @@ export function PaymentPage() {
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>(
+    PaymentMethod.CARD,
+  );
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -43,12 +52,14 @@ export function PaymentPage() {
   const total = subtotal + shipping;
 
   const digitsOnly = cardNumber.replace(/\D/g, "");
-  const formValid =
-    name.trim().length > 1 &&
-    address.trim().length > 4 &&
+  const cardValid =
     digitsOnly.length === 16 &&
     /^\d{2}\/\d{2}$/.test(expiry) &&
     cvv.length >= 3;
+  const formValid =
+    name.trim().length > 1 &&
+    address.trim().length > 4 &&
+    (paymentMethod === PaymentMethod.COD || cardValid);
 
   if (items.length === 0) {
     return (
@@ -87,12 +98,25 @@ export function PaymentPage() {
     };
 
     try {
-      // Simulate a brief authorization delay, this is a mock payment flow —
-      // no real card network is contacted.
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      await createOrder(order);
-      clearCart();
-      navigate("/orders", { state: { justPlaced: true } });
+      const ord = await createOrder(order);
+      const payment: PaymentRequest = {
+        orderId: ord.id,
+        amount: total,
+        method: paymentMethod,
+        status:
+          paymentMethod === PaymentMethod.CARD
+            ? PaymentStatus.PAID
+            : PaymentStatus.PENDING,
+        initiatedAt: new Date().toISOString(),
+      };
+      const result = await paymentService.pay(payment);
+      if (result.status === PaymentStatus.FAILED) {
+        setError("Payment failed. Please try again.");
+        navigate("/cart");
+      } else {
+        clearCart();
+        navigate("/orders");
+      }
     } catch {
       setError(
         "The mock payment gateway couldn't confirm this order. Please try again.",
@@ -141,45 +165,91 @@ export function PaymentPage() {
 
           <h2 className="payment-form__section-title">Payment</h2>
 
-          <label className="payment-field">
-            <span>Card number</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-              placeholder="4242 4242 4242 4242"
-              required
-            />
-          </label>
-
-          <div className="payment-field-row">
-            <label className="payment-field">
-              <span>Expiry</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                placeholder="MM/YY"
-                required
-              />
-            </label>
-
-            <label className="payment-field">
-              <span>CVV</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={cvv}
-                onChange={(e) =>
-                  setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
-                }
-                placeholder="123"
-                required
-              />
-            </label>
+          <div className="payment-method">
+            <span className="payment-method__label">Payment method</span>
+            <div className="payment-method__options">
+              <label
+                className={`payment-method__option${
+                  paymentMethod === PaymentMethod.CARD
+                    ? " payment-method__option--active"
+                    : ""
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={PaymentMethod.CARD}
+                  checked={paymentMethod === PaymentMethod.CARD}
+                  onChange={() => setPaymentMethod(PaymentMethod.CARD)}
+                />
+                <span className="payment-method__icon">💳</span>
+                <span>Credit / Debit Card</span>
+              </label>
+              <label
+                className={`payment-method__option${
+                  paymentMethod === PaymentMethod.COD
+                    ? " payment-method__option--active"
+                    : ""
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={PaymentMethod.COD}
+                  checked={paymentMethod === PaymentMethod.COD}
+                  onChange={() => setPaymentMethod(PaymentMethod.COD)}
+                />
+                <span className="payment-method__icon">🏠</span>
+                <span>Cash on Delivery</span>
+              </label>
+            </div>
           </div>
+
+          {paymentMethod === PaymentMethod.CARD && (
+            <div>
+              <label className="payment-field">
+                <span>Card number</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={cardNumber}
+                  onChange={(e) =>
+                    setCardNumber(formatCardNumber(e.target.value))
+                  }
+                  placeholder="4242 4242 4242 4242"
+                  required
+                />
+              </label>
+
+              <div className="payment-field-row">
+                <label className="payment-field">
+                  <span>Expiry</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={expiry}
+                    onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                    placeholder="MM/YY"
+                    required
+                  />
+                </label>
+
+                <label className="payment-field">
+                  <span>CVV</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={cvv}
+                    onChange={(e) =>
+                      setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
+                    }
+                    placeholder="123"
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+          )}
 
           {error && <p className="payment-form__error">{error}</p>}
 

@@ -195,6 +195,83 @@
   border-top: 2px solid var(--line-on-bone) !important;
 }
 
+/* ── Payment method selector ─────────────────────────── */
+.payment-method {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-method__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.payment-method__options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payment-method__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--line-on-bone);
+  border-radius: 8px;
+  background: var(--bone);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+  user-select: none;
+}
+
+.payment-method__option:hover {
+  border-color: var(--copper);
+  background: color-mix(in srgb, var(--copper) 5%, var(--bone));
+  color: var(--ink);
+}
+
+.payment-method__option--active {
+  border-color: var(--copper);
+  background: color-mix(in srgb, var(--copper) 8%, var(--bone));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--copper) 15%, transparent);
+  color: var(--ink);
+}
+
+/* Hide the native radio button; the styled border conveys selection */
+.payment-method__option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border: 2px solid var(--line-on-bone);
+  border-radius: 50%;
+  background: var(--bone);
+  transition: border-color 0.18s ease, background 0.18s ease;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.payment-method__option input[type="radio"]:checked {
+  border-color: var(--copper);
+  background: radial-gradient(circle, var(--copper) 45%, transparent 45%);
+}
+
+.payment-method__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
 /* ── Empty state ─────────────────────────────────────── */
 .payment-empty {
   padding: 100px 32px;

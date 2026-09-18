@@ -7,7 +7,16 @@ interface Payment {
   amount: number;
   status: PaymentStatusType;
   method: PaymentMethodType;
-  paymentDate: string;
+  initiatedAt: string;
+  paidAt: string;
 }
 
-export type { Payment };
+interface PaymentRequest {
+  orderId: number;
+  amount: number;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  initiatedAt: string;
+}
+
+export type { Payment, PaymentRequest };

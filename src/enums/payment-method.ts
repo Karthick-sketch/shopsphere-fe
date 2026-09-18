@@ -1,6 +1,5 @@
 export const PaymentMethod = {
   COD: "COD",
-  UPI: "UPI",
   CARD: "CARD",
 } as const;
 
