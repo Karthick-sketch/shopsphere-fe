@@ -21,7 +21,7 @@ function formatExpiry(value: string) {
 }
 
 export function PaymentPage() {
-  const { lines, clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -32,12 +32,12 @@ export function PaymentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const subtotal = lines.reduce(
-    (sum, l) => sum + l.product.price * l.quantity,
+  const subtotal = items.reduce(
+    (sum, i) => sum + i.productInfo.price * i.quantity,
     0,
   );
   const shipping =
-    lines.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
+    items.length === 0 || subtotal >= FREE_SHIPPING_THRESHOLD
       ? 0
       : SHIPPING_FLAT_RATE;
   const total = subtotal + shipping;
@@ -50,7 +50,7 @@ export function PaymentPage() {
     /^\d{2}\/\d{2}$/.test(expiry) &&
     cvv.length >= 3;
 
-  if (lines.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="page payment-empty">
         <h1>Nothing to pay for yet</h1>
@@ -68,14 +68,14 @@ export function PaymentPage() {
     setSubmitting(true);
     setError(null);
 
-    const items: OrderItemRequest[] = lines.map((l) => ({
-      quantity: l.quantity,
-      price: l.product.price,
-      productId: l.product.id!,
+    const orderItems: OrderItemRequest[] = items.map((i) => ({
+      quantity: i.quantity,
+      price: i.productInfo.price,
+      productId: i.productInfo.id!,
     }));
 
     const order: OrderRequest = {
-      items,
+      orderItems,
       subtotal,
       shipping,
       total,
@@ -194,32 +194,36 @@ export function PaymentPage() {
         <aside className="payment-summary">
           <h2 className="payment-summary__title">Order summary</h2>
           <ul className="payment-summary__list">
-            {lines.map((line) => (
-              <li key={line.product.id} className="payment-summary__line">
-                <img src={line.product.image} alt="" />
+            {items.map((item) => (
+              <li key={item.productInfo.id} className="payment-summary__line">
+                <img src={item.productInfo.image} alt="" />
                 <div>
-                  <p className="payment-summary__name">{line.product.name}</p>
+                  <p className="payment-summary__name">
+                    {item.productInfo.name}
+                  </p>
                   <p className="payment-summary__meta">
-                    {line.quantity} × ${line.product.price.toFixed(2)}
+                    {item.quantity} × ${item.productInfo.price.toFixed(2)}
                   </p>
                 </div>
                 <span className="payment-summary__line-total">
-                  ${(line.product.price * line.quantity).toFixed(2)}
+                  ${(item.productInfo.price * item.quantity).toFixed(2)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="payment-summary__row">
-            <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
-          <div className="payment-summary__row">
-            <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
-          </div>
-          <div className="payment-summary__row payment-summary__row--total">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+          <div className="payment-summary__totals">
+            <div className="payment-summary__row">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="payment-summary__row">
+              <span>Shipping</span>
+              <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+            </div>
+            <div className="payment-summary__row payment-summary__row--total">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
           </div>
         </aside>
       </div>

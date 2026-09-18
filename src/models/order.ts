@@ -38,7 +38,7 @@ interface OrderRequest {
   shippingName: string;
   shippingAddress: string;
   cardLast4: string;
-  items: OrderItemRequest[];
+  orderItems: OrderItemRequest[];
   userId?: number;
 }
 

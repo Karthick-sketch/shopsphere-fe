@@ -65,9 +65,7 @@ export function CartPage() {
               <div className="quantity-stepper cart-line__stepper">
                 <button
                   type="button"
-                  onClick={() =>
-                    setQuantity(item.productInfo.id, item.quantity - 1)
-                  }
+                  onClick={() => setQuantity(item.id, item.quantity - 1)}
                   aria-label="Decrease quantity"
                 >
                   −
@@ -77,7 +75,7 @@ export function CartPage() {
                   type="button"
                   onClick={() =>
                     setQuantity(
-                      item.productInfo.id,
+                      item.id,
                       Math.min(item.productInfo.stock, item.quantity + 1),
                     )
                   }
@@ -94,7 +92,7 @@ export function CartPage() {
               <button
                 type="button"
                 className="cart-line__remove"
-                onClick={() => removeItem(item.productInfo.id)}
+                onClick={() => removeItem(item.id)}
               >
                 Remove
               </button>
@@ -102,34 +100,34 @@ export function CartPage() {
           ))}
         </ul>
 
-        <aside className="cart-Info">
-          <h2 className="cart-Info__title">Order Info</h2>
-          <div className="cart-Info__row">
+        <aside className="cart-summary">
+          <h2 className="cart-summary__title">Order Info</h2>
+          <div className="cart-summary__row">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          <div className="cart-Info__row">
+          <div className="cart-summary__row">
             <span>Shipping</span>
             <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
           </div>
           {shipping > 0 && (
-            <p className="cart-Info__hint">
+            <p className="cart-summary__hint">
               Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for
               free shipping.
             </p>
           )}
-          <div className="cart-Info__row cart-Info__row--total">
+          <div className="cart-summary__row cart-summary__row--total">
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
 
           <button
-            className="btn btn-primary cart-Info__checkout"
+            className="btn btn-primary cart-summary__checkout"
             onClick={() => navigate("/payment")}
           >
             Place order
           </button>
-          <Link to="/" className="cart-Info__continue">
+          <Link to="/" className="cart-summary__continue">
             Continue shopping
           </Link>
         </aside>
