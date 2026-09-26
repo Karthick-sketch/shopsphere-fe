@@ -6,9 +6,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Cart, CartRequest } from "../models/cart";
 import type { Product } from "../models/product";
 import { CartService } from "../api/cart-service";
+import { useAuth } from "../auth/AuthContext";
 
 interface CartContextValue {
   items: Cart[];
@@ -26,10 +28,18 @@ const cartService = new CartService();
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<Cart[]>([]);
 
+  const navigate = useNavigate();
+
+  const { user } = useAuth();
+
   // Hydrate cart from the backend on mount
   useEffect(() => {
-    cartService.fetchCart().then(setItems).catch(console.error);
-  }, []);
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    cartService.fetchCart(user.id).then(setItems).catch(console.error);
+  }, [user]);
 
   async function addItem(product: Product, quantity = 1) {
     const existing = items.find((i) => i.productInfo.id === product.id);
@@ -90,7 +100,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   async function clearCart() {
     try {
-      await cartService.clearCart();
+      await cartService.clearCart(user.id);
       setItems([]);
     } catch (err) {
       console.error(err);

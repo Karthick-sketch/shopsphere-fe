@@ -1,9 +1,25 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../auth/AuthContext";
 import "./Navbar.css";
 
 export function Navbar() {
   const { totalCount } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logout();
+    navigate("/");
+  }
+
+  const initials = user
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+    : "";
 
   return (
     <header className="navbar">
@@ -22,10 +38,32 @@ export function Navbar() {
           </NavLink>
         </nav>
 
-        <NavLink to="/cart" className="navbar__cart">
-          <span>Cart</span>
-          <span className="navbar__cart-count">{totalCount}</span>
-        </NavLink>
+        <div className="navbar__user">
+          <NavLink to="/cart" className="navbar__cart">
+            <span>Cart</span>
+            <span className="navbar__cart-count">{totalCount}</span>
+          </NavLink>
+
+          {user ? (
+            <>
+              <span className="navbar__avatar" aria-hidden="true">
+                {initials}
+              </span>
+              <span className="navbar__user-name">{user.name}</span>
+              <button
+                id="navbar-logout"
+                className="navbar__auth-btn"
+                onClick={handleLogout}
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" id="navbar-signin" className="navbar__auth-btn">
+              Sign in
+            </Link>
+          )}
+        </div>
       </div>
     </header>
   );
