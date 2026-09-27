@@ -1,19 +1,17 @@
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { createOrder } from "../api/order-service";
+import OrderService from "../api/order-service";
 import type { OrderItemRequest, OrderRequest } from "../models/order";
 import "./PaymentPage.css";
 import { OrderStatus } from "../enums/order-status";
 import type { PaymentRequest } from "../models/payment";
 import { PaymentMethod, type PaymentMethodType } from "../enums/payment-method";
+import PaymentService from "../api/payment-service";
 import { PaymentStatus } from "../enums/payment-status";
-import { PaymentService } from "../api/payment-service";
 
 const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
-
-const paymentService = new PaymentService();
 
 function formatCardNumber(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -98,7 +96,7 @@ export function PaymentPage() {
     };
 
     try {
-      const ord = await createOrder(order);
+      const ord = await OrderService.createOrder(order);
       const payment: PaymentRequest = {
         orderId: ord.id,
         amount: total,
@@ -109,7 +107,7 @@ export function PaymentPage() {
             : PaymentStatus.PENDING,
         initiatedAt: new Date().toISOString(),
       };
-      const result = await paymentService.pay(payment);
+      const result = await PaymentService.pay(payment);
       if (result.status === PaymentStatus.FAILED) {
         setError("Payment failed. Please try again.");
         navigate("/cart");

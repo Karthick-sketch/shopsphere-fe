@@ -2,6 +2,8 @@ import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./AuthPage.css";
+import { UserRole } from "../enums/user-role";
+import type { RegisterRequest } from "../models/auth-user";
 
 function getStrength(pw: string): 0 | 1 | 2 | 3 | 4 {
   if (!pw) return 0;
@@ -44,7 +46,12 @@ export function RegisterPage() {
     setLoading(true);
     setError(null);
     try {
-      await register(name.trim(), email.trim(), password);
+      await register({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        role: UserRole.USER,
+      } as RegisterRequest);
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed.");
@@ -79,7 +86,9 @@ export function RegisterPage() {
           <div className="auth-field">
             <label htmlFor="reg-name">Full name</label>
             <div className="auth-field-input-wrap">
-              <span className="auth-field-icon" aria-hidden="true">👤</span>
+              <span className="auth-field-icon" aria-hidden="true">
+                👤
+              </span>
               <input
                 id="reg-name"
                 type="text"
@@ -97,7 +106,9 @@ export function RegisterPage() {
           <div className="auth-field">
             <label htmlFor="reg-email">Email address</label>
             <div className="auth-field-input-wrap">
-              <span className="auth-field-icon" aria-hidden="true">✉</span>
+              <span className="auth-field-icon" aria-hidden="true">
+                ✉
+              </span>
               <input
                 id="reg-email"
                 type="email"
@@ -115,7 +126,9 @@ export function RegisterPage() {
           <div className="auth-field">
             <label htmlFor="reg-password">Password</label>
             <div className="auth-field-input-wrap">
-              <span className="auth-field-icon" aria-hidden="true">🔒</span>
+              <span className="auth-field-icon" aria-hidden="true">
+                🔒
+              </span>
               <input
                 id="reg-password"
                 type={showPw ? "text" : "password"}
@@ -170,8 +183,7 @@ export function RegisterPage() {
         </form>
 
         <p className="auth-footer">
-          Already have an account?{" "}
-          <Link to="/login">Sign in</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>
     </div>

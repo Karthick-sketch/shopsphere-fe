@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { fetchProduct } from "../api/product-service";
+import ProductService from "../api/product-service";
 import type { Product } from "../models/product";
 import { CartPreview } from "../components/CartPreview";
 import { useCart } from "../context/CartContext";
@@ -23,7 +23,7 @@ export function ProductDetails() {
     setStatus("loading");
     setJustAdded(false);
     setQuantity(1);
-    fetchProduct(id)
+    ProductService.fetchProduct(id)
       .then((data) => {
         if (!cancelled) {
           setProduct(data);

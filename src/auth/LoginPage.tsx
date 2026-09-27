@@ -2,6 +2,7 @@ import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "./AuthPage.css";
+import type { LoginRequest } from "../models/auth-user";
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -22,7 +23,10 @@ export function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      await login(email.trim(), password);
+      await login({
+        email: email.trim(),
+        password,
+      } as LoginRequest);
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
@@ -57,7 +61,9 @@ export function LoginPage() {
           <div className="auth-field">
             <label htmlFor="login-email">Email address</label>
             <div className="auth-field-input-wrap">
-              <span className="auth-field-icon" aria-hidden="true">✉</span>
+              <span className="auth-field-icon" aria-hidden="true">
+                ✉
+              </span>
               <input
                 id="login-email"
                 type="email"
@@ -75,7 +81,9 @@ export function LoginPage() {
           <div className="auth-field">
             <label htmlFor="login-password">Password</label>
             <div className="auth-field-input-wrap">
-              <span className="auth-field-icon" aria-hidden="true">🔒</span>
+              <span className="auth-field-icon" aria-hidden="true">
+                🔒
+              </span>
               <input
                 id="login-password"
                 type={showPw ? "text" : "password"}
@@ -115,8 +123,7 @@ export function LoginPage() {
         </form>
 
         <p className="auth-footer">
-          Don't have an account?{" "}
-          <Link to="/register">Create one</Link>
+          Don't have an account? <Link to="/register">Create one</Link>
         </p>
       </div>
     </div>

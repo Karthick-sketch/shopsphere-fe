@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { fetchOrders } from "../api/order-service";
+import OrderService from "../api/order-service";
 import type { Order } from "../models/order";
 import "./OrdersPage.css";
 
@@ -25,7 +25,7 @@ export function OrdersPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchOrders()
+    OrderService.fetchOrders()
       .then((data) => {
         if (!cancelled) {
           setOrders(data);

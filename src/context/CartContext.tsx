@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import type { Cart, CartRequest } from "../models/cart";
 import type { Product } from "../models/product";
-import { CartService } from "../api/cart-service";
+import CartService from "../api/cart-service";
 import { useAuth } from "../auth/AuthContext";
 
 interface CartContextValue {
@@ -22,8 +22,6 @@ interface CartContextValue {
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
-
-const cartService = new CartService();
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<Cart[]>([]);
@@ -38,7 +36,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       navigate("/login");
       return;
     }
-    cartService.fetchCart(user.id).then(setItems).catch(console.error);
+    CartService.fetchCart(user.id).then(setItems).catch(console.error);
   }, [user]);
 
   async function addItem(product: Product, quantity = 1) {
@@ -50,7 +48,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         quantity: Math.min(existing.quantity + quantity, product.stock),
       };
       try {
-        const saved = await cartService.updateItem(updated);
+        const saved = await CartService.updateItem(updated);
         setItems((prev) => prev.map((i) => (i.id === saved.id ? saved : i)));
       } catch (err) {
         console.error(err);
@@ -62,7 +60,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         productId: product.id,
       };
       try {
-        const saved = await cartService.addItem(newItem);
+        const saved = await CartService.addItem(newItem);
         setItems((prev) => [...prev, saved]);
       } catch (err) {
         console.error(err);
@@ -72,7 +70,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   async function removeItem(cartId: number) {
     try {
-      await cartService.removeItem(cartId);
+      await CartService.removeItem(cartId);
       setItems((prev) => prev.filter((i) => i.id !== cartId));
     } catch (err) {
       console.error(err);
@@ -91,7 +89,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     const updated: Cart = { ...item, quantity };
     try {
-      const saved = await cartService.updateItem(updated);
+      const saved = await CartService.updateItem(updated);
       setItems((prev) => prev.map((i) => (i.id === saved.id ? saved : i)));
     } catch (err) {
       console.error(err);
@@ -100,7 +98,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   async function clearCart() {
     try {
-      await cartService.clearCart(user.id);
+      await CartService.clearCart(user.id);
       setItems([]);
     } catch (err) {
       console.error(err);

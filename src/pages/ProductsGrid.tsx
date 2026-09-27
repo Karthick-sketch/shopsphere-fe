@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchProducts } from "../api/product-service";
+import ProductService from "../api/product-service";
 import type { Product } from "../models/product";
 import { ProductCard } from "../components/ProductCard";
 import { CartPreview } from "../components/CartPreview";
@@ -17,7 +17,7 @@ export function ProductsGrid() {
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
-    fetchProducts()
+    ProductService.fetchProducts()
       .then((data) => {
         if (!cancelled) {
           setProducts(data);
