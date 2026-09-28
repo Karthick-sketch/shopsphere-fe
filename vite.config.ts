@@ -11,6 +11,31 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      "/shopsphere-user-service": {
+        target: "http://localhost:8765",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/shopsphere-product-service": {
+        target: "http://localhost:8765",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/shopsphere-cart-service": {
+        target: "http://localhost:8765",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/shopsphere-order-service": {
+        target: "http://localhost:8765",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/shopsphere-payment-service": {
+        target: "http://localhost:8765",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });
