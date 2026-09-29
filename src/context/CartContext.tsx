@@ -28,16 +28,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { authUser } = useAuth();
 
   // Hydrate cart from the backend on mount
   useEffect(() => {
-    if (!user) {
+    if (!authUser) {
       navigate("/login");
       return;
     }
-    CartService.fetchCart(user.id).then(setItems).catch(console.error);
-  }, [user]);
+    CartService.fetchCart(authUser.id).then(setItems).catch(console.error);
+  }, [authUser]);
 
   async function addItem(product: Product, quantity = 1) {
     const existing = items.find((i) => i.productInfo.id === product.id);
@@ -55,7 +55,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
     } else {
       const newItem: CartRequest = {
-        userId: 0,
+        userId: authUser.id,
         quantity: Math.min(quantity, product.stock),
         productId: product.id,
       };
@@ -98,7 +98,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   async function clearCart() {
     try {
-      await CartService.clearCart(user.id);
+      await CartService.clearCart(authUser.id);
       setItems([]);
     } catch (err) {
       console.error(err);

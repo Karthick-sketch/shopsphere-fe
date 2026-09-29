@@ -20,7 +20,7 @@ interface Order {
   shippingAddress: string;
   cardLast4: string;
   items: OrderItem[];
-  userId?: number;
+  authUserId?: number;
 }
 
 interface OrderItemRequest {
@@ -39,7 +39,7 @@ interface OrderRequest {
   shippingAddress: string;
   cardLast4: string;
   orderItems: OrderItemRequest[];
-  userId?: number;
+  authUserId?: number;
 }
 
 export type { Order, OrderItem, OrderItemRequest, OrderRequest };

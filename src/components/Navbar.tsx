@@ -5,7 +5,7 @@ import "./Navbar.css";
 
 export function Navbar() {
   const { totalCount } = useCart();
-  const { user, logout } = useAuth();
+  const { authUser, logout } = useAuth();
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -13,8 +13,8 @@ export function Navbar() {
     navigate("/");
   }
 
-  const initials = user
-    ? user.name
+  const initials = authUser
+    ? authUser.name
         .split(" ")
         .map((n) => n[0])
         .slice(0, 2)
@@ -44,12 +44,12 @@ export function Navbar() {
             <span className="navbar__cart-count">{totalCount}</span>
           </NavLink>
 
-          {user ? (
+          {authUser ? (
             <>
               <span className="navbar__avatar" aria-hidden="true">
                 {initials}
               </span>
-              <span className="navbar__user-name">{user.name}</span>
+              <span className="navbar__user-name">{authUser.name}</span>
               <button
                 id="navbar-logout"
                 className="navbar__auth-btn"

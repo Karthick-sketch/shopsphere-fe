@@ -13,4 +13,9 @@ export default class OrderService {
     const res = await apiClient.post<Order>(serviceRoute, order);
     return res.data;
   }
+
+  static async updateOrder(id: number, order: OrderRequest): Promise<Order> {
+    const res = await apiClient.put<Order>(`${serviceRoute}/${id}`, order);
+    return res.data;
+  }
 }

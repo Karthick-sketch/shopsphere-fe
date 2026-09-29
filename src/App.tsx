@@ -10,14 +10,14 @@ import { RegisterPage } from "./auth/RegisterPage";
 import { useAuth } from "./auth/AuthContext";
 
 function App() {
-  const { user } = useAuth();
+  const { authUser } = useAuth();
 
   return (
     <>
       <Navbar />
       <main style={{ flex: 1 }}>
         <Routes>
-          {user ? (
+          {authUser ? (
             <>
               <Route path="/" element={<ProductsGrid />} />
               <Route path="/products/:id" element={<ProductDetails />} />
