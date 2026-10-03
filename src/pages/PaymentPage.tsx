@@ -4,14 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../auth/AuthContext";
 import OrderService from "../api/order-service";
-import PaymentService from "../api/payment-service";
 import UserService from "../api/user-service";
 import type { OrderItemRequest, OrderRequest } from "../models/order";
-import type { PaymentRequest } from "../models/payment";
 import type { ShippingDetails } from "../models/user";
-import { OrderStatus } from "../enums/order-status";
 import { PaymentMethod, type PaymentMethodType } from "../enums/payment-method";
-import { PaymentStatus } from "../enums/payment-status";
 
 const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -36,6 +32,7 @@ export function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>(
     PaymentMethod.CARD,
   );
+  const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -58,8 +55,8 @@ export function PaymentPage() {
     /^\d{2}\/\d{2}$/.test(expiry) &&
     cvv.length >= 3;
   const formValid =
-    shippingDetails?.name.trim().length > 1 &&
-    shippingDetails?.shippingAddress.trim().length > 4 &&
+    shippingDetails?.name?.trim().length > 1 &&
+    shippingDetails?.shippingAddress?.trim().length > 4 &&
     (paymentMethod === PaymentMethod.COD || cardValid);
 
   if (items.length === 0) {
@@ -86,14 +83,6 @@ export function PaymentPage() {
       });
   }, []);
 
-  function updateOrderStatusAsFailed(orderId: number, order: OrderRequest) {
-    setError("Failed to process payment.");
-    OrderService.updateOrder(orderId, {
-      ...order,
-      status: OrderStatus.PAYMENT_FAILED,
-    } as OrderRequest);
-  }
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!formValid || submitting) return;
@@ -111,48 +100,28 @@ export function PaymentPage() {
       subtotal,
       shipping,
       total,
-      placedAt: new Date().toISOString(),
-      status: OrderStatus.CONFIRMED,
-      shippingName: shippingDetails?.name.trim(),
-      shippingAddress: shippingDetails?.shippingAddress.trim(),
+      shippingName: shippingDetails?.name?.trim(),
+      shippingAddress: shippingDetails?.shippingAddress?.trim(),
       cardLast4: digitsOnly.slice(-4),
-      authUserId: authUser.id,
+      paymentDetails: {
+        paymentMethod: paymentMethod,
+        cardName: cardName.trim(),
+        cardNumber: digitsOnly,
+        expiryMonth: expiry.slice(0, 2),
+        expiryYear: expiry.slice(3),
+        cvv,
+      },
     };
 
-    OrderService.createOrder(order)
-      .then((ord) => {
-        const payment: PaymentRequest = {
-          orderId: ord.id,
-          amount: total,
-          method: paymentMethod,
-          status:
-            paymentMethod === PaymentMethod.CARD
-              ? PaymentStatus.PAID
-              : PaymentStatus.PENDING,
-          initiatedAt: new Date().toISOString(),
-        };
-        PaymentService.pay(payment)
-          .then((result) => {
-            if (result.status === PaymentStatus.FAILED) {
-              updateOrderStatusAsFailed(ord.id, order);
-            } else {
-              clearCart();
-            }
-          })
-          .catch(() => {
-            updateOrderStatusAsFailed(ord.id, order);
-          })
-          .finally(() => {
-            setSubmitting(false);
-            navigate("/orders");
-          });
+    OrderService.checkout(order)
+      .then(() => {
+        clearCart();
+        navigate("/orders");
       })
       .catch(() => {
-        setError(
-          "The mock payment gateway couldn't confirm this order. Please try again.",
-        );
-        setSubmitting(false);
-      });
+        setError("Order placement failed. Please try again.");
+      })
+      .finally(() => setSubmitting(false));
   }
 
   return (
@@ -260,6 +229,17 @@ export function PaymentPage() {
 
           {paymentMethod === PaymentMethod.CARD && (
             <div>
+              <label className="payment-field">
+                <span>Card Name</span>
+                <input
+                  type="text"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                  placeholder="Jordan Ruiz"
+                  required
+                />
+              </label>
+
               <label className="payment-field">
                 <span>Card number</span>
                 <input

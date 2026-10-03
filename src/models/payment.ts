@@ -19,4 +19,13 @@ interface PaymentRequest {
   initiatedAt: string;
 }
 
-export type { Payment, PaymentRequest };
+interface PaymentDetails {
+  paymentMethod: PaymentMethodType;
+  cardName: string;
+  cardNumber: string;
+  expiryMonth: string;
+  expiryYear: string;
+  cvv: string;
+}
+
+export type { Payment, PaymentRequest, PaymentDetails };

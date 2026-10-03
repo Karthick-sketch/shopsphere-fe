@@ -1,5 +1,6 @@
 import type { ProductSummary } from "./product";
 import type { OrderStatusType } from "../enums/order-status";
+import type { PaymentDetails } from "./payment";
 
 interface OrderItem {
   id?: number;
@@ -30,8 +31,6 @@ interface OrderItemRequest {
 }
 
 interface OrderRequest {
-  status: OrderStatusType;
-  placedAt: string;
   subtotal: number;
   shipping: number;
   total: number;
@@ -39,7 +38,7 @@ interface OrderRequest {
   shippingAddress: string;
   cardLast4: string;
   orderItems: OrderItemRequest[];
-  authUserId?: number;
+  paymentDetails: PaymentDetails;
 }
 
 export type { Order, OrderItem, OrderItemRequest, OrderRequest };
