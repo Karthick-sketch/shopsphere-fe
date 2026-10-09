@@ -45,7 +45,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (existing) {
       const updated: Cart = {
         ...existing,
-        quantity: Math.min(existing.quantity + quantity, product.stock),
+        // quantity: Math.min(existing.quantity + quantity, product.stock),
+        quantity: existing.quantity + quantity,
       };
       try {
         const saved = await CartService.updateItem(updated);
@@ -56,7 +57,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } else {
       const newItem: CartRequest = {
         userId: authUser.id,
-        quantity: Math.min(quantity, product.stock),
+        // quantity: Math.min(quantity, product.stock),
+        quantity: quantity,
         productId: product.id,
       };
       try {

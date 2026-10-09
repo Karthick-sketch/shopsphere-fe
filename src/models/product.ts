@@ -6,14 +6,14 @@ interface Product {
   sku: string;
   category: string;
   stock: number;
-  image?: string;
+  imageUrl?: string;
   userId: number;
 }
 
 interface ProductSummary {
   id: number;
   name: string;
-  image?: string;
+  imageUrl?: string;
 }
 
 interface ProductInfo {
@@ -21,7 +21,7 @@ interface ProductInfo {
   name: string;
   price: number;
   stock: number;
-  image?: string;
+  imageUrl?: string;
 }
 
 export type { Product, ProductSummary, ProductInfo };

@@ -27,7 +27,7 @@ export function CartPreview() {
             {items.map((item) => (
               <li key={item.productInfo.id} className="cart-preview__line">
                 <img
-                  src={item.productInfo.image}
+                  src={item.productInfo.imageUrl}
                   alt=""
                   className="cart-preview__thumb"
                 />

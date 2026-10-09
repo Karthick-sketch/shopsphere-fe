@@ -44,7 +44,7 @@ export function CartPage() {
                 className="cart-line__thumb-link"
               >
                 <img
-                  src={item.productInfo.image}
+                  src={item.productInfo.imageUrl}
                   alt=""
                   className="cart-line__thumb"
                 />

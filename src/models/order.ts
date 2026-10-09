@@ -1,6 +1,6 @@
 import type { ProductSummary } from "./product";
 import type { OrderStatusType } from "../enums/order-status";
-import type { PaymentDetails } from "./payment";
+import type { PaymentMethodType } from "../enums/payment-method";
 
 interface OrderItem {
   id?: number;
@@ -38,7 +38,19 @@ interface OrderRequest {
   shippingAddress: string;
   cardLast4: string;
   orderItems: OrderItemRequest[];
-  paymentDetails: PaymentDetails;
+  paymentMethod: PaymentMethodType;
+  paymentToken: string;
 }
 
-export type { Order, OrderItem, OrderItemRequest, OrderRequest };
+interface OrderStatusResponse {
+  id: number;
+  status: OrderStatusType;
+}
+
+export type {
+  Order,
+  OrderItem,
+  OrderItemRequest,
+  OrderRequest,
+  OrderStatusResponse,
+};

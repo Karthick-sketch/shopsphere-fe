@@ -34,7 +34,7 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 40px;
-  align-items: start;   /* both columns shrink-wrap their content */
+  align-items: start; /* both columns shrink-wrap their content */
 }
 
 /* ── Form column ─────────────────────────────────────── */
@@ -74,7 +74,9 @@
   border: 1px solid var(--line-on-bone);
   border-radius: 6px;
   background: var(--bone);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .payment-field input:focus {
@@ -104,7 +106,7 @@
   /* Stick to the top of the viewport as the user scrolls the long form */
   position: sticky;
   top: 96px;
-  align-self: start;           /* prevents the column from stretching */
+  align-self: start; /* prevents the column from stretching */
 
   background: var(--bone-dim);
   border: 1px solid var(--line-on-bone);
@@ -257,7 +259,9 @@
   border: 2px solid var(--line-on-bone);
   border-radius: 50%;
   background: var(--bone);
-  transition: border-color 0.18s ease, background 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -287,6 +291,355 @@
   margin-bottom: 8px;
 }
 
+/* ═══════════════════════════════════════════════════════
+   ── PAYMENT PROCESSING OVERLAY ────────────────────────
+   ═══════════════════════════════════════════════════════ */
+
+.payment-processing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(33, 26, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: overlay-fade-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.payment-processing-card {
+  position: relative;
+  background: var(--bone);
+  border-radius: 20px;
+  padding: 56px 48px 48px;
+  max-width: 420px;
+  width: calc(100% - 48px);
+  text-align: center;
+  box-shadow:
+    0 32px 80px rgba(33, 26, 22, 0.28),
+    0 0 0 1px rgba(33, 26, 22, 0.06);
+  animation: card-pop-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.08s;
+  overflow: hidden;
+}
+
+/* Shimmer sweep across the card */
+.payment-processing-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(193, 113, 47, 0.06) 50%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  animation: shimmer-sweep 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-sweep {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes card-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Orbital spinner ring */
+.processing-spinner-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 28px;
+}
+
+.processing-spinner-ring::before,
+.processing-spinner-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.processing-spinner-ring::before {
+  border: 4px solid var(--bone-dim);
+}
+
+.processing-spinner-ring::after {
+  border: 4px solid transparent;
+  border-top-color: var(--copper);
+  border-right-color: color-mix(in srgb, var(--copper) 40%, transparent);
+  animation: spin-ring 0.9s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
+}
+
+@keyframes spin-ring {
+  to { transform: rotate(360deg); }
+}
+
+/* Inner pulsing dot */
+.processing-spinner-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  background: var(--copper);
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.12; }
+  50%       { transform: translate(-50%, -50%) scale(1);   opacity: 0.25; }
+}
+
+.payment-processing-card h2 {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.payment-processing-card p {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* Animated status dots */
+.processing-dots {
+  display: inline-flex;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.processing-dots span {
+  width: 7px;
+  height: 7px;
+  background: var(--copper);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: dot-bounce 1.4s ease-in-out infinite;
+}
+
+.processing-dots span:nth-child(2) { animation-delay: 0.18s; }
+.processing-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.75); }
+  40%           { opacity: 1;    transform: scale(1);    }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ── ORDER SUCCESS OVERLAY ─────────────────────────────
+   ═══════════════════════════════════════════════════════ */
+
+.order-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(33, 26, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: overlay-fade-in 0.3s ease both;
+}
+
+.order-success-card {
+  position: relative;
+  background: var(--bone);
+  border-radius: 24px;
+  padding: 60px 52px 52px;
+  max-width: 440px;
+  width: calc(100% - 48px);
+  text-align: center;
+  box-shadow:
+    0 40px 100px rgba(33, 26, 22, 0.32),
+    0 0 0 1px rgba(33, 26, 22, 0.06);
+  animation: card-pop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.06s;
+  overflow: hidden;
+}
+
+/* Radial green glow behind the check */
+.order-success-card::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, #4caf75 18%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Check circle icon */
+.success-icon-wrap {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 28px;
+}
+
+.success-icon-circle {
+  width: 88px;
+  height: 88px;
+  background: linear-gradient(135deg, #4caf75, #34a35a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: circle-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.3s;
+  box-shadow:
+    0 8px 28px rgba(76, 175, 117, 0.4),
+    0 0 0 12px rgba(76, 175, 117, 0.1);
+}
+
+@keyframes circle-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* SVG check path draw animation */
+.success-check {
+  width: 40px;
+  height: 40px;
+}
+
+.success-check-path {
+  stroke: #fff;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: draw-check 0.45s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+  animation-delay: 0.7s;
+}
+
+@keyframes draw-check {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Orbital dashed ring around check icon */
+.success-icon-orbit {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px dashed rgba(76, 175, 117, 0.3);
+  animation: orbit-rotate 8s linear infinite;
+}
+
+@keyframes orbit-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Floating confetti dots */
+.success-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.confetti-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confetti-float 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.confetti-dot:nth-child(1) { left: 15%; top: 80%; background: var(--copper);      animation-delay: 0.5s;  width: 10px; height: 10px; }
+.confetti-dot:nth-child(2) { left: 30%; top: 85%; background: #4caf75;            animation-delay: 0.6s; }
+.confetti-dot:nth-child(3) { left: 50%; top: 90%; background: var(--slate);       animation-delay: 0.55s; width: 6px; height: 6px; }
+.confetti-dot:nth-child(4) { left: 70%; top: 82%; background: var(--copper);      animation-delay: 0.65s; width: 9px; height: 9px; }
+.confetti-dot:nth-child(5) { left: 85%; top: 88%; background: #4caf75;            animation-delay: 0.5s;  width: 7px; height: 7px; }
+.confetti-dot:nth-child(6) { left: 20%; top: 75%; background: var(--moss);        animation-delay: 0.7s; }
+.confetti-dot:nth-child(7) { left: 62%; top: 78%; background: var(--copper-deep); animation-delay: 0.62s; width: 11px; height: 11px; }
+.confetti-dot:nth-child(8) { left: 42%; top: 83%; background: #4caf75;            animation-delay: 0.58s; width: 6px; height: 6px; }
+
+@keyframes confetti-float {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-120px) scale(0.4) rotate(180deg); }
+}
+
+.order-success-card h2 {
+  font-size: 26px;
+  letter-spacing: -0.025em;
+  margin-bottom: 10px;
+  color: var(--ink);
+}
+
+.order-success-card p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* Redirect chip */
+.success-redirect-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: var(--bone-dim);
+  border: 1px solid var(--line-on-bone);
+  border-radius: 99px;
+  padding: 6px 14px;
+  animation: fade-up 0.4s ease both;
+  animation-delay: 1s;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.success-redirect-note::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #4caf75;
+  border-radius: 50%;
+  animation: pulse-green 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
   .payment-page__layout {
@@ -307,4 +660,10 @@
   .payment-field-row {
     grid-template-columns: 1fr 1fr;
   }
+  .payment-processing-card,
+  .order-success-card {
+    padding: 44px 28px 36px;
+    border-radius: 16px;
+  }
 }
+
