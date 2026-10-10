@@ -8,6 +8,7 @@ import { OrdersPage } from "./pages/OrdersPage";
 import { LoginPage } from "./auth/LoginPage";
 import { RegisterPage } from "./auth/RegisterPage";
 import { useAuth } from "./auth/AuthContext";
+import { Toast } from "./components/Toast";
 
 function App() {
   const { authUser } = useAuth();
@@ -37,6 +38,7 @@ function App() {
           )}
         </Routes>
       </main>
+      <Toast />
     </>
   );
 }

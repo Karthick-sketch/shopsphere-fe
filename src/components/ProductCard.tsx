@@ -7,7 +7,7 @@ export function ProductCard({ product }: { product: Product }) {
   const { items, addItem, setQuantity } = useCart();
   const cartLine = items.find((i) => i.productInfo.id === product.id);
   const qty = cartLine?.quantity ?? 0;
-  // const outOfStock = product.stock === 0;
+  // product.outOfStock = product.outOfStock ?? false;
 
   return (
     <div className={`product-card cat-${product.category.toLowerCase()}`}>
@@ -30,10 +30,10 @@ export function ProductCard({ product }: { product: Product }) {
         {qty === 0 ? (
           <button
             className="product-card__atc"
-            // disabled={outOfStock}
+            // disabled={product.outOfStock}
             onClick={() => addItem(product)}
           >
-            {/* {outOfStock ? "Out of stock" : "Add to cart"} */}
+            {/* {product.outOfStock ? "Out of stock" : "Add to cart"} */}
             Add to cart
           </button>
         ) : (
@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
             <button
               className="product-card__qty-btn"
               aria-label="Increase quantity"
-              // disabled={qty >= product.stock}
+              // disabled={product.outOfStock}
               onClick={() => setQuantity(cartLine.id, qty + 1)}
             >
               +

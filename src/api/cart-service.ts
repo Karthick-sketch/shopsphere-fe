@@ -1,5 +1,5 @@
 import apiClient from "./interceptor/api-client";
-import type { Cart, CartRequest } from "../models/cart";
+import type { Cart, CartRequest, CartUpdateRequest } from "../models/cart";
 
 const serviceRoute = "/shopsphere-cart-service/api/cart";
 
@@ -14,7 +14,7 @@ export default class CartService {
     return res.data;
   }
 
-  static async updateItem(cart: Cart): Promise<Cart> {
+  static async updateItem(cart: CartUpdateRequest): Promise<Cart> {
     const res = await apiClient.put<Cart>(`${serviceRoute}/${cart.id}`, cart);
     return res.data;
   }

@@ -7,10 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Cart, CartRequest } from "../models/cart";
+import axios from "axios";
+import type { Cart, CartRequest, CartUpdateRequest } from "../models/cart";
 import type { Product } from "../models/product";
 import CartService from "../api/cart-service";
 import { useAuth } from "../auth/AuthContext";
+import { useToast } from "./ToastContext";
 
 interface CartContextValue {
   items: Cart[];
@@ -28,6 +30,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const navigate = useNavigate();
 
+  const { showToast } = useToast();
+
   const { authUser } = useAuth();
 
   // Hydrate cart from the backend on mount
@@ -43,21 +47,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const existing = items.find((i) => i.productInfo.id === product.id);
 
     if (existing) {
-      const updated: Cart = {
-        ...existing,
-        // quantity: Math.min(existing.quantity + quantity, product.stock),
+      const updated: CartUpdateRequest = {
+        id: existing.id,
+        userId: existing.userId,
+        productId: existing.productInfo.id,
         quantity: existing.quantity + quantity,
       };
       try {
         const saved = await CartService.updateItem(updated);
         setItems((prev) => prev.map((i) => (i.id === saved.id ? saved : i)));
       } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 409) {
+          showToast("Out of Stock. Please try again later");
+        }
         console.error(err);
       }
     } else {
       const newItem: CartRequest = {
         userId: authUser.id,
-        // quantity: Math.min(quantity, product.stock),
         quantity: quantity,
         productId: product.id,
       };
@@ -65,6 +72,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const saved = await CartService.addItem(newItem);
         setItems((prev) => [...prev, saved]);
       } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 409) {
+          showToast("Out of Stock. Please try again later");
+        }
         console.error(err);
       }
     }
@@ -89,11 +99,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
       console.error(`Cart item with id ${cartId} not found`);
       return;
     }
-    const updated: Cart = { ...item, quantity };
+    const updated: CartUpdateRequest = {
+      id: item.id,
+      userId: item.userId,
+      productId: item.productInfo.id,
+      quantity,
+    };
     try {
       const saved = await CartService.updateItem(updated);
       setItems((prev) => prev.map((i) => (i.id === saved.id ? saved : i)));
     } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        showToast("Out of Stock. Please try again later");
+      }
       console.error(err);
     }
   }

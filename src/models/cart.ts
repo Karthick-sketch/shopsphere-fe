@@ -13,4 +13,11 @@ interface CartRequest {
   quantity: number;
 }
 
-export type { Cart, CartRequest };
+interface CartUpdateRequest {
+  id: number;
+  userId: number;
+  productId: number;
+  quantity: number;
+}
+
+export type { Cart, CartRequest, CartUpdateRequest };

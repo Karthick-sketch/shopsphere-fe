@@ -1,0 +1,110 @@
+/* ── Container ─────────────────────────────────────────────────── */
+#toastbox {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+/* ── Toast card ────────────────────────────────────────────────── */
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 360px;
+  min-height: 64px;
+  padding: 0.85rem 1rem 1.35rem; /* bottom padding leaves room for progress bar */
+  background: #fff0f0;
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #ef4444;
+  border-radius: 10px;
+  box-shadow:
+    0 4px 16px rgba(239, 68, 68, 0.12),
+    0 1px 4px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #7f1d1d;
+  pointer-events: all;
+  overflow: hidden;
+
+  /* Slide-in animation */
+  animation: toast-slide-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Icon ──────────────────────────────────────────────────────── */
+.toast-icon {
+  flex-shrink: 0;
+  color: #ef4444;
+}
+
+/* ── Message text ──────────────────────────────────────────────── */
+.toast-message {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* ── Close button ──────────────────────────────────────────────── */
+.toast-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: #ef4444;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.toast-close:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── Progress bar (shrinks left-to-right over 5 s) ─────────────── */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #ef4444;
+  border-radius: 0 0 0 6px;
+  transform-origin: left center;
+  animation: toast-progress 5s linear forwards;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────── */
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

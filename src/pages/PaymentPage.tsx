@@ -153,7 +153,11 @@ export function PaymentPage() {
   return (
     <div className="page payment-page">
       {paymentProcessing && (
-        <div className="payment-processing-overlay" role="status" aria-live="polite">
+        <div
+          className="payment-processing-overlay"
+          role="status"
+          aria-live="polite"
+        >
           <div className="payment-processing-card">
             <div className="processing-spinner-ring">
               <div className="processing-spinner-dot" />
@@ -161,7 +165,9 @@ export function PaymentPage() {
             <h2>Processing Payment</h2>
             <p>Please wait while we securely process your payment.</p>
             <div className="processing-dots">
-              <span /><span /><span />
+              <span />
+              <span />
+              <span />
             </div>
           </div>
         </div>
@@ -182,18 +188,21 @@ export function PaymentPage() {
             </div>
             <div className="success-icon-wrap">
               <div className="success-icon-circle">
-                <svg className="success-check" viewBox="0 0 44 44" aria-hidden="true">
-                  <path
-                    className="success-check-path"
-                    d="M10 23l9 9L34 14"
-                  />
+                <svg
+                  className="success-check"
+                  viewBox="0 0 44 44"
+                  aria-hidden="true"
+                >
+                  <path className="success-check-path" d="M10 23l9 9L34 14" />
                 </svg>
               </div>
               <div className="success-icon-orbit" />
             </div>
             <h2>Order Confirmed!</h2>
-            <p>Your order has been placed successfully. You'll receive a confirmation shortly.</p>
-            <div className="success-redirect-note">Redirecting to your orders…</div>
+            <p>Your order has been placed successfully.</p>
+            <div className="success-redirect-note">
+              Redirecting to your orders…
+            </div>
           </div>
         </div>
       )}
