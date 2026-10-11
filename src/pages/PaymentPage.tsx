@@ -1,6 +1,7 @@
 import "./PaymentPage.css";
 import { type FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../auth/AuthContext";
 import OrderService from "../api/order-service";
@@ -11,6 +12,7 @@ import { PaymentMethod, type PaymentMethodType } from "../enums/payment-method";
 import type { PaymentDetails } from "../models/payment";
 import PaymentGatewayService from "../api/payment-gateway-service";
 import { OrderStatus } from "../enums/order-status";
+import { useToast } from "../context/ToastContext";
 
 const SHIPPING_FLAT_RATE = 6.5;
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -28,6 +30,7 @@ function formatExpiry(value: string) {
 
 export function PaymentPage() {
   const { items } = useCart();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const { authUser } = useAuth();
 
@@ -143,7 +146,13 @@ export function PaymentPage() {
         setError("Order placement failed. Please try again.");
       }
     } catch (err) {
-      setError("Order placement failed. Please try again.");
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        showToast(
+          "Stock is not available for the added item(s). Please try again later.",
+        );
+      } else {
+        setError("Order placement failed. Please try again.");
+      }
     } finally {
       setSubmitting(false);
       setPaymentProcessing(false);
