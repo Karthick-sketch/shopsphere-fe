@@ -9,6 +9,15 @@ interface Product {
   userId: number;
 }
 
+interface ProductResponse {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  imageUrl?: string;
+  isAvailable: boolean;
+}
+
 interface ProductSummary {
   id: number;
   name: string;
@@ -23,4 +32,4 @@ interface ProductInfo {
   imageUrl?: string;
 }
 
-export type { Product, ProductSummary, ProductInfo };
+export type { Product, ProductSummary, ProductInfo, ProductResponse };

@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
-import type { Product } from "../models/product";
+import type { ProductResponse } from "../models/product";
 import { useCart } from "../context/CartContext";
 import "./ProductCard.css";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product }: { product: ProductResponse }) {
   const { items, addItem, setQuantity } = useCart();
   const cartLine = items.find((i) => i.productInfo.id === product.id);
   const qty = cartLine?.quantity ?? 0;
-  // product.outOfStock = product.outOfStock ?? false;
 
   return (
     <div className={`product-card cat-${product.category.toLowerCase()}`}>
@@ -30,11 +29,10 @@ export function ProductCard({ product }: { product: Product }) {
         {qty === 0 ? (
           <button
             className="product-card__atc"
-            // disabled={product.outOfStock}
+            disabled={!product.isAvailable}
             onClick={() => addItem(product)}
           >
-            {/* {product.outOfStock ? "Out of stock" : "Add to cart"} */}
-            Add to cart
+            {product.isAvailable ? "Add to cart" : "Out of stock"}
           </button>
         ) : (
           <div className="product-card__qty">
@@ -49,7 +47,7 @@ export function ProductCard({ product }: { product: Product }) {
             <button
               className="product-card__qty-btn"
               aria-label="Increase quantity"
-              // disabled={product.outOfStock}
+              disabled={!product.isAvailable}
               onClick={() => setQuantity(cartLine.id, qty + 1)}
             >
               +

@@ -9,14 +9,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import type { Cart, CartRequest, CartUpdateRequest } from "../models/cart";
-import type { Product } from "../models/product";
+import type { ProductResponse } from "../models/product";
 import CartService from "../api/cart-service";
 import { useAuth } from "../auth/AuthContext";
 import { useToast } from "./ToastContext";
 
 interface CartContextValue {
   items: Cart[];
-  addItem: (product: Product, quantity?: number) => void;
+  addItem: (product: ProductResponse, quantity?: number) => void;
   removeItem: (cartId: number) => void;
   setQuantity: (cartId: number, quantity: number) => void;
   clearCart: () => void;
@@ -43,7 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     CartService.fetchCart(authUser.id).then(setItems).catch(console.error);
   }, [authUser]);
 
-  async function addItem(product: Product, quantity = 1) {
+  async function addItem(product: ProductResponse, quantity = 1) {
     const existing = items.find((i) => i.productInfo.id === product.id);
 
     if (existing) {
