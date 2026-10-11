@@ -57,8 +57,6 @@ export function ProductDetails() {
     );
   }
 
-  const outOfStock = product.stock === 0;
-
   function handleAdd() {
     if (!product) return;
     addItem(product, quantity);
@@ -75,7 +73,7 @@ export function ProductDetails() {
         <div className="product-details__main">
           <div className="product-details__grid">
             <div className="product-details__image-wrap">
-              <img src={product.image} alt={product.name} />
+              <img src={product.imageUrl} alt={product.name} />
             </div>
 
             <div className="product-details__info">
@@ -88,39 +86,33 @@ export function ProductDetails() {
                 {product.description}
               </p>
 
-              <p className="product-details__stock">
-                {outOfStock ? "Out of stock" : `${product.stock} in stock`}
-              </p>
-
               <div className="product-details__actions">
-                <div className="quantity-stepper">
-                  <button
-                    type="button"
-                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    disabled={outOfStock}
-                    aria-label="Decrease quantity"
-                  >
-                    −
-                  </button>
-                  <span>{quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setQuantity((q) => Math.min(product.stock, q + 1))
-                    }
-                    disabled={outOfStock}
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
-                </div>
+                {product.isAvailable && (
+                  <div className="quantity-stepper">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+                    <span>{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity((q) => q + 1)}
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
 
                 <button
                   className="btn btn-primary product-details__add"
                   onClick={handleAdd}
-                  disabled={outOfStock}
+                  disabled={!product.isAvailable}
                 >
-                  {outOfStock ? "Out of stock" : "Add to cart"}
+                  {product.isAvailable ? "Add to cart" : "Out of stock"}
                 </button>
               </div>
 

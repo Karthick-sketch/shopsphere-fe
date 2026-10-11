@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import ProductService from "../api/product-service";
-import type { ProductResponse } from "../models/product";
+import type { Product } from "../models/product";
 import { ProductCard } from "../components/ProductCard";
 import { CartPreview } from "../components/CartPreview";
 import "./ProductsGrid.css";
@@ -8,7 +8,7 @@ import "./ProductsGrid.css";
 const ALL = "All";
 
 export function ProductsGrid() {
-  const [products, setProducts] = useState<ProductResponse[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [status, setStatus] = useState<"loading" | "error" | "ready">(
     "loading",
   );

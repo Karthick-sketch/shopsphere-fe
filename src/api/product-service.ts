@@ -1,11 +1,11 @@
 import apiClient from "./interceptor/api-client";
-import type { Product, ProductResponse } from "../models/product";
+import type { Product } from "../models/product";
 
 const serviceRoute = "/shopsphere-product-service/api/products";
 
 export default class ProductService {
-  static async fetchProducts(): Promise<ProductResponse[]> {
-    const res = await apiClient.get<ProductResponse[]>(serviceRoute);
+  static async fetchProducts(): Promise<Product[]> {
+    const res = await apiClient.get<Product[]>(serviceRoute);
     return res.data;
   }
 

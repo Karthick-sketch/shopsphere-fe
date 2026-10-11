@@ -6,15 +6,6 @@ interface Product {
   sku: string;
   category: string;
   imageUrl?: string;
-  userId: number;
-}
-
-interface ProductResponse {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  imageUrl?: string;
   isAvailable: boolean;
 }
 
@@ -32,4 +23,4 @@ interface ProductInfo {
   imageUrl?: string;
 }
 
-export type { Product, ProductSummary, ProductInfo, ProductResponse };
+export type { Product, ProductSummary, ProductInfo };
